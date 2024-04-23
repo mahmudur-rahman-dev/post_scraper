@@ -1,0 +1,10 @@
+# IDE & OS specific files
+.idea/
+*.iml
+.idea/*.*
+Local History/  # IntelliJ IDEA specific
+venv/  # Virtualenv environment directory
+.env  # Environment variables file
+.venv  # Pipenv virtualenv
+.vscode/  # VS Code specific files
+venv/*
