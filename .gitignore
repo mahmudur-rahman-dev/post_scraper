@@ -8,3 +8,5 @@ venv/  # Virtualenv environment directory
 .venv  # Pipenv virtualenv
 .vscode/  # VS Code specific files
 venv/*
+linkedin_posts.csv
+__pycache__/

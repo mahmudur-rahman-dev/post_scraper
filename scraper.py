@@ -7,9 +7,10 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
+import csv
 from sheets import SheetsService
 
-# Function to log in to LinkedIn
+
 def login_to_linkedin(email, password):
     chrome_driver_path = "/usr/bin/chromedriver"
     service = Service(chrome_driver_path)
@@ -27,20 +28,19 @@ def login_to_linkedin(email, password):
 
     return driver
 
+
 def scrape_linkedin_posts(driver, company_url):
     driver.get(company_url)
 
     # Wait for the posts to load
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".feed-shared-update-v2")))
 
-    # soup = BeautifulSoup(driver.page_source, 'html.parser')
-
     posts = []
 
     last_height = driver.execute_script("return document.body.scrollHeight")
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)
+        time.sleep(3)
 
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
@@ -56,7 +56,7 @@ def scrape_linkedin_posts(driver, company_url):
         if not post_content_elem:
             continue
 
-        post_content = post_content_elem.get_text(separator='\n').strip()
+        post_content = post_content_elem.get_text().strip()
 
         posts.append({
             "Post": post_content
@@ -70,12 +70,28 @@ password = os.getenv("LINKEDIN_PASSWORD")
 print(f"Email: {email}")
 print(f"Password: {password}")
 
-
-company_url = "https://www.linkedin.com/company/accel-vc/posts/?feedView=all"
+# company_url = "https://www.linkedin.com/company/accel-vc/posts/?feedView=all"
+company_url = "https://www.linkedin.com/company/blackstonegroup/posts/?feedView=all"
 
 driver = login_to_linkedin(email, password)
 
+
+def write_posts_to_csv(posts, filename):
+    cwd = os.getcwd()
+    full_path = os.path.join(cwd, filename)
+
+    with open(full_path, 'w', newline='') as csvfile:
+        fieldnames = list(posts[0].keys())
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for post in posts:
+            writer.writerow(post)
+
+
 result = scrape_linkedin_posts(driver, company_url)
+write_posts_to_csv(result, "linkedin_posts.csv")
+# print(result)
 print(len(result))
 
 driver.quit()
