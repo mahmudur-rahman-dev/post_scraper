@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import os
+from sheets import SheetsService
 
 # Function to log in to LinkedIn
 def login_to_linkedin(email, password):
@@ -39,7 +40,7 @@ def scrape_linkedin_posts(driver, company_url):
     last_height = driver.execute_script("return document.body.scrollHeight")
     while True:
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(3)
+        time.sleep(5)
 
         new_height = driver.execute_script("return document.body.scrollHeight")
         if new_height == last_height:
@@ -64,7 +65,11 @@ def scrape_linkedin_posts(driver, company_url):
 
 
 email = os.getenv("LINKEDIN_EMAIL")
-password = os.getenv("LINKEDIN_PASS")
+password = os.getenv("LINKEDIN_PASSWORD")
+
+print(f"Email: {email}")
+print(f"Password: {password}")
+
 
 company_url = "https://www.linkedin.com/company/accel-vc/posts/?feedView=all"
 
