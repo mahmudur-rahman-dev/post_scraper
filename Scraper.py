@@ -64,7 +64,7 @@ def scrape_linkedin_posts(driver, company_url):
 
 
 email = os.getenv("LINKEDIN_EMAIL")
-password = os.getenv("LINKEDIN_EMAIL=")
+password = os.getenv("LINKEDIN_PASS")
 
 company_url = "https://www.linkedin.com/company/accel-vc/posts/?feedView=all"
 
