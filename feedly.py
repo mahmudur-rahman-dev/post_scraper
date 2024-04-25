@@ -52,10 +52,16 @@ def login_to_feedly(email, password):
 
     return driver
 
+def parse_feedly_posts(driver):
+    html_content = driver.page_source
+    soup = BeautifulSoup(html_content, 'html.parser')
+    print(soup.prettify())
 
 email = ''
 password = ''
 driver = login_to_feedly(email, password)
+parse_feedly_posts(driver)
+
 
 
 def write_posts_to_csv(posts, filename):
